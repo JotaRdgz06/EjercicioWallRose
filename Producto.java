@@ -1,13 +1,13 @@
 package Logica;
 
 public class Producto {
-	private int codigo;
+	private Integer codigo;
 	private String nombre;
 	private double existencias;
 	private String unidad;
 	private double precio;
 	
-	public Producto(int codigo, String nombre, double existencias, String unidad, double precio) {
+	public Producto(Integer codigo, String nombre, double existencias, String unidad, double precio) {
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.existencias = existencias;
@@ -47,7 +47,7 @@ public class Producto {
 		this.precio = precio;
 	}
 
-	public int getCodigo() {
+	public Integer getCodigo() {
 		return codigo;
 	}
 	

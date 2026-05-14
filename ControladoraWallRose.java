@@ -81,4 +81,54 @@ public class ControladoraWallRose {
     	Cliente cliente = new Cliente(idCliente, nombre, email);
     	clientes.put(idCliente, cliente);
     }
+    
+    public void actualizarCliente(String idCliente, String nombre, String email) throws Exception {
+        if (clientes.containsKey(idCliente)) {
+            Cliente cliente = clientes.get(idCliente);
+            cliente.setNombre(nombre);
+            cliente.setEmail(email);
+        } else {
+        	throw new Exception("No se encontró el usuario");
+        }
+    }
+    
+    public void borrarCliente(String idCliente) throws Exception {
+    	if (clientes.containsKey(idCliente)) {
+    		clientes.remove(idCliente);
+    	} else {
+    		throw new Exception("No se encontró el usuario");
+    	}
+    }
+    
+    public List<Producto> obtenerListadoProductos() {
+        return new LinkedList<>(productos.values());
+    }
+    
+    public void crearProducto(String nombre, double existencias, String unidad, double precio) {
+    	Producto producto = new Producto(consecutivoProducto, nombre, existencias, unidad, precio);
+    	productos.put(consecutivoProducto, producto);
+    	consecutivoProducto++;
+    }
+    
+    public Producto obtenerProducto(Integer codigoProducto) {
+    	return productos.get(codigoProducto);
+    }
+    
+    public void actualizarProducto(Integer codigoProducto, String nombre, double existencias, String unidad, double precio) throws Exception {
+    	if (productos.containsKey(codigoProducto)) {
+    		Producto producto = productos.get(codigoProducto);
+    		producto.setNombre(nombre);
+    		producto.setExistencias(existencias);
+    		producto.setUnidad(unidad);
+    		producto.setPrecio(precio);
+    	} else {
+    		throw new Exception("No se encontró el producto");
+    	}
+    }
+    
+    public void borrarProducto(Integer codigoProducto) {
+    	if (productos.containsKey(codigoProducto)) {
+    		productos.remove(codigoProducto);
+    	}
+    }
 }

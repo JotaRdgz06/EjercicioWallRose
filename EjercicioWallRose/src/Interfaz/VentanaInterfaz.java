@@ -1,22 +1,31 @@
 package Interfaz;
 
 import java.awt.EventQueue;
+import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 
 import Control.ControladoraWallRose;
+import Logica.Cliente;
+
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaInterfaz {
 
 	private JFrame frame;
-	private JTable table;
+	private JTable tableCliente;
 
 	/**
 	 * Launch the application.
@@ -52,6 +61,12 @@ public class VentanaInterfaz {
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				cargarClientes();
+			}
+		});
 		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
 		JPanel Clientes = new JPanel();
@@ -59,27 +74,32 @@ public class VentanaInterfaz {
 		Clientes.setLayout(null);
 		
 		JButton Ver = new JButton("Ver");
-		Ver.setBounds(432, 32, 103, 20);
+		Ver.setBounds(432, 10, 103, 20);
 		Clientes.add(Ver);
 		
 		JButton Editar = new JButton("Editar");
-		Editar.setBounds(432, 62, 103, 20);
+		Editar.setBounds(432, 40, 103, 20);
 		Clientes.add(Editar);
 		
 		JButton Agregar = new JButton("Agregar");
-		Agregar.setBounds(432, 92, 103, 20);
+		Agregar.setBounds(432, 70, 103, 20);
 		Clientes.add(Agregar);
 		
 		JButton Borrar = new JButton("Borrar");
-		Borrar.setBounds(432, 122, 103, 20);
+		Borrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				borrarCliente();
+			}
+		});
+		Borrar.setBounds(432, 100, 103, 20);
 		Clientes.add(Borrar);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 32, 397, 245);
+		scrollPane.setBounds(10, 10, 397, 267);
 		Clientes.add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
+		tableCliente = new JTable();
+		tableCliente.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
@@ -93,10 +113,11 @@ public class VentanaInterfaz {
 				return columnTypes[columnIndex];
 			}
 		});
-		table.getColumnModel().getColumn(0).setPreferredWidth(153);
-		table.getColumnModel().getColumn(1).setPreferredWidth(225);
-		table.getColumnModel().getColumn(2).setPreferredWidth(261);
-		scrollPane.setViewportView(table);
+		tableCliente.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableCliente.getColumnModel().getColumn(0).setPreferredWidth(153);
+		tableCliente.getColumnModel().getColumn(1).setPreferredWidth(225);
+		tableCliente.getColumnModel().getColumn(2).setPreferredWidth(261);
+		scrollPane.setViewportView(tableCliente);
 		
 		JPanel Ordenes = new JPanel();
 		tabbedPane.addTab("Ordenes", null, Ordenes, null);
@@ -106,11 +127,35 @@ public class VentanaInterfaz {
 		Productos.setLayout(null);
 	}
 	
-	private void BotonBorrar() {
-		
+	private void borrarCliente() {
+		int numeroFila = tableCliente.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frame, "Debe seleccionar un cliente", "Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			DefaultTableModel model = (DefaultTableModel) tableCliente.getModel();
+			String idCliente = (String)model.getValueAt(numeroFila, 0);
+			String nombreCliente = (String)model.getValueAt(numeroFila, 1);
+			int respuesta = JOptionPane.showConfirmDialog(frame, "Se eliminará la información del cliente" + nombreCliente + ", id: " + idCliente, "Confirmar", JOptionPane.YES_NO_OPTION);
+			if (respuesta == JOptionPane.YES_OPTION) {
+				ControladoraWallRose control = ControladoraWallRose.getInstance();
+				try {
+					control.borrarCliente(idCliente);
+					cargarClientes();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(frame, "Error al borrar el cliente", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
 	}
 	
 	private void cargarClientes() {
-		
+		ControladoraWallRose control = ControladoraWallRose.getInstance();
+		DefaultTableModel model = (DefaultTableModel) tableCliente.getModel();
+		model.setRowCount(0);
+		List<Cliente> listaClientes = control.obtenerListadoClientes();
+		for (Cliente cliente : listaClientes) {
+			Object[] fila = new Object[] {cliente.getId(), cliente.getNombre(), cliente.getEmail()};
+			model.addRow(fila);
+		}
 	}
 }

@@ -74,6 +74,11 @@ public class VentanaInterfaz {
 		Clientes.setLayout(null);
 		
 		JButton Ver = new JButton("Ver");
+		Ver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				verCliente();
+			}
+		});
 		Ver.setBounds(432, 10, 103, 20);
 		Clientes.add(Ver);
 		
@@ -156,6 +161,29 @@ public class VentanaInterfaz {
 		for (Cliente cliente : listaClientes) {
 			Object[] fila = new Object[] {cliente.getId(), cliente.getNombre(), cliente.getEmail()};
 			model.addRow(fila);
+		}
+	}
+	
+	private void verCliente() {
+		int numeroFila = tableCliente.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frame, "Debe seleccionar un cliente", "Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			DefaultTableModel model = (DefaultTableModel) tableCliente.getModel();
+			String idCliente = (String)model.getValueAt(numeroFila, 0);
+			VerCliente ventanaDetalleCliente = new VerCliente(idCliente);
+			ventanaDetalleCliente.setVisible(true);
+		}
+	}
+	
+	private void agregarCliente() {
+		int numeroFila = tableCliente.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frame, "Debe seleccionar un cliente", "Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			DefaultTableModel model = (DefaultTableModel) tableCliente.getModel();
+			AgregarCliente ventanaDetalleCliente = new AgregarCliente();
+			ventanaDetalleCliente.setVisible(true);
 		}
 	}
 }

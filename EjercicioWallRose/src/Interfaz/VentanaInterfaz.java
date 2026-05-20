@@ -83,10 +83,20 @@ public class VentanaInterfaz {
 		Clientes.add(Ver);
 		
 		JButton Editar = new JButton("Editar");
+		Editar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editarCliente();
+			}
+		});
 		Editar.setBounds(432, 40, 103, 20);
 		Clientes.add(Editar);
 		
 		JButton Agregar = new JButton("Agregar");
+		Agregar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				agregarCliente();
+			}
+		});
 		Agregar.setBounds(432, 70, 103, 20);
 		Clientes.add(Agregar);
 		
@@ -184,6 +194,18 @@ public class VentanaInterfaz {
 			DefaultTableModel model = (DefaultTableModel) tableCliente.getModel();
 			AgregarCliente ventanaDetalleCliente = new AgregarCliente();
 			ventanaDetalleCliente.setVisible(true);
+		}
+	}
+	
+	private void editarCliente() {
+		int numeroFila = tableCliente.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frame, "Debe seleccionar un cliente", "Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			DefaultTableModel model = (DefaultTableModel) tableCliente.getModel();
+			String idCliente = (String) model.getValueAt(numeroFila, 0);
+			AgregarCliente ventana = new AgregarCliente(idCliente);
+			ventana.setVisible(true); 
 		}
 	}
 }

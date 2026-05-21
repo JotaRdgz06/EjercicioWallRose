@@ -3,6 +3,7 @@ package Control;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import Logica.*;
 
@@ -15,6 +16,14 @@ public class ControladoraWallRose {
     private Map<Integer, Producto> productos;
     private Integer consecutivoOrden;
     private Integer consecutivoProducto;
+    
+    private ControladoraWallRose() {
+        clientes = new TreeMap<>();
+        ordenes = new TreeMap<>();
+        productos = new TreeMap<>();
+        consecutivoOrden = 1;
+        consecutivoProducto = 1;
+    }
     
     public static ControladoraWallRose getInstance() {
         if (instance == null) {

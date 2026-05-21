@@ -187,14 +187,10 @@ public class VentanaInterfaz {
 	}
 	
 	private void agregarCliente() {
-		int numeroFila = tableCliente.getSelectedRow();
-		if (numeroFila == -1) {
-			JOptionPane.showMessageDialog(frame, "Debe seleccionar un cliente", "Error", JOptionPane.ERROR_MESSAGE);
-		} else {
-			DefaultTableModel model = (DefaultTableModel) tableCliente.getModel();
-			AgregarCliente ventanaDetalleCliente = new AgregarCliente();
-			ventanaDetalleCliente.setVisible(true);
-		}
+		DefaultTableModel model = (DefaultTableModel) tableCliente.getModel();
+		AgregarCliente ventanaDetalleCliente = new AgregarCliente();
+		ventanaDetalleCliente.setVisible(true);
+		cargarClientes();
 	}
 	
 	private void editarCliente() {
@@ -206,6 +202,7 @@ public class VentanaInterfaz {
 			String idCliente = (String) model.getValueAt(numeroFila, 0);
 			AgregarCliente ventana = new AgregarCliente(idCliente);
 			ventana.setVisible(true); 
+			cargarClientes();
 		}
 	}
 }

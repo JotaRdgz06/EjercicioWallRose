@@ -44,8 +44,8 @@ public class AgregarCliente extends JDialog {
         this(null);
     }
 	public AgregarCliente(String idCliente) {
+		setModal(true);
 		this.idClienteEditar = idCliente;
-		
 		setBounds(100, 100, 308, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -119,6 +119,7 @@ public class AgregarCliente extends JDialog {
         String email = textFieldEmail.getText().trim();
         if (id.isEmpty() || nombre.isEmpty() || email.isEmpty()) {
             JOptionPane.showMessageDialog(contentPanel, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
         ControladoraWallRose control = ControladoraWallRose.getInstance();
         try {
@@ -126,7 +127,6 @@ public class AgregarCliente extends JDialog {
 				control.crearCliente(id, nombre, email);
 				JOptionPane.showMessageDialog(contentPanel, "Cliente agregado correctamente");
 			} else {
-				// MODO EDITAR
 				control.actualizarCliente(idClienteEditar, nombre, email);
 				JOptionPane.showMessageDialog(contentPanel, "Cliente actualizado correctamente");
 			}

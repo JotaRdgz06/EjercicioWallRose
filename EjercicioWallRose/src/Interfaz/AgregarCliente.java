@@ -45,6 +45,7 @@ public class AgregarCliente extends JDialog {
     }
 	public AgregarCliente(String idCliente) {
 		setModal(true);
+		setResizable(false);
 		this.idClienteEditar = idCliente;
 		setBounds(100, 100, 308, 300);
 		getContentPane().setLayout(new BorderLayout());

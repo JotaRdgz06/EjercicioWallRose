@@ -31,6 +31,7 @@ public class VerCliente extends JDialog {
 	 * Create the panel.
 	 */
 	public VerCliente(String idCliente) {
+		setResizable(false);
 		setModal(true);
 		this.idCliente = idCliente;
 		setBounds(100, 100, 450, 330);

@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 
 import Control.ControladoraWallRose;
 import Logica.Cliente;
+import Logica.Orden;
+import Logica.Producto;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -21,11 +23,15 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.JTree;
 
 public class VentanaInterfaz {
 
 	private JFrame frame;
 	private JTable tableCliente;
+	private JTable tablaProducto;
+	private JScrollPane scrollPaneProducto;
 
 	/**
 	 * Launch the application.
@@ -109,9 +115,9 @@ public class VentanaInterfaz {
 		Borrar.setBounds(432, 100, 103, 20);
 		Clientes.add(Borrar);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 10, 397, 267);
-		Clientes.add(scrollPane);
+		scrollPaneProducto = new JScrollPane();
+		scrollPaneProducto.setBounds(10, 10, 397, 267);
+		Clientes.add(scrollPaneProducto);
 		
 		tableCliente = new JTable();
 		tableCliente.setModel(new DefaultTableModel(
@@ -132,14 +138,58 @@ public class VentanaInterfaz {
 		tableCliente.getColumnModel().getColumn(0).setPreferredWidth(153);
 		tableCliente.getColumnModel().getColumn(1).setPreferredWidth(225);
 		tableCliente.getColumnModel().getColumn(2).setPreferredWidth(261);
-		scrollPane.setViewportView(tableCliente);
+		scrollPaneProducto.setViewportView(tableCliente);
 		
 		JPanel Ordenes = new JPanel();
 		tabbedPane.addTab("Ordenes", null, Ordenes, null);
 		
 		JPanel Productos = new JPanel();
+		Productos.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				cargarProductos();
+			}
+		});
 		tabbedPane.addTab("Productos", null, Productos, null);
 		Productos.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Productos");
+		lblNewLabel.setBounds(27, 10, 85, 12);
+		Productos.add(lblNewLabel);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 45, 442, 218);
+		Productos.add(scrollPane_1);
+		
+		tableCliente.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tablaProducto = new JTable();
+		tablaProducto.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"C\u00F3digo", "Nombre", "Existencias", "Unidad", "Precio"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, Object.class, String.class, String.class, String.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		});
+		scrollPane_1.setViewportView(tablaProducto);
+		
+		JButton agregarProd = new JButton("Agregar");
+		agregarProd.setBounds(462, 48, 93, 20);
+		Productos.add(agregarProd);
+		
+		JButton editarProd = new JButton("Editar");
+		editarProd.setBounds(462, 84, 93, 20);
+		Productos.add(editarProd);
+		
+		JButton borrarProd = new JButton("Borrar");
+		borrarProd.setBounds(462, 121, 93, 20);
+		Productos.add(borrarProd);
 	}
 	
 	private void borrarCliente() {
@@ -203,6 +253,17 @@ public class VentanaInterfaz {
 			AgregarCliente ventana = new AgregarCliente(idCliente);
 			ventana.setVisible(true); 
 			cargarClientes();
+		}
+	}
+	
+	private void cargarProductos() {
+		ControladoraWallRose control = ControladoraWallRose.getInstance();
+		DefaultTableModel model = (DefaultTableModel) tablaProducto.getModel();
+		model.setRowCount(0);
+		List<Producto> listaProducto = control.obtenerListadoProductos();
+		for (Producto producto : listaProducto) {
+			Object[] fila = new Object[] {producto.getCodigo(), producto.getNombre(), producto.getExistencias(), producto.getUnidad(), producto.getPrecio()};
+			model.addRow(fila);
 		}
 	}
 }

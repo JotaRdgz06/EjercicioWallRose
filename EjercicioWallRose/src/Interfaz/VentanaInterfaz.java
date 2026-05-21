@@ -25,6 +25,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JTree;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
 
 public class VentanaInterfaz {
 
@@ -32,7 +34,7 @@ public class VentanaInterfaz {
 	private JTable tableCliente;
 	private JTable tablaProducto;
 	private JScrollPane scrollPaneProducto;
-	private JTable table;
+	private JTable tablaOrdenes;
 
 	/**
 	 * Launch the application.
@@ -125,27 +127,25 @@ public class VentanaInterfaz {
 			new Object[][] {
 			},
 			new String[] {
-				"ID", "Titulo nombre", "Email"
+				"ID", "Nombre", "Email"
 			}
-		) {
-			Class[] columnTypes = new Class[] {
-				Object.class, String.class, Object.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
+		));
+		tableCliente.getColumnModel().getColumn(0).setPreferredWidth(83);
+		tableCliente.getColumnModel().getColumn(1).setPreferredWidth(130);
+		tableCliente.getColumnModel().getColumn(2).setPreferredWidth(137);
 		tableCliente.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableCliente.getColumnModel().getColumn(0).setPreferredWidth(153);
-		tableCliente.getColumnModel().getColumn(1).setPreferredWidth(225);
-		tableCliente.getColumnModel().getColumn(2).setPreferredWidth(261);
 		scrollPaneProducto.setViewportView(tableCliente);
 		
 		JPanel Ordenes = new JPanel();
 		tabbedPane.addTab("Ordenes", null, Ordenes, null);
 		Ordenes.setLayout(null);
 		
-		JButton agregarbtn = new JButton("Agregar");
+		JButton agregarbtn = new JButton("Nueva");
+		agregarbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				agregarOrden();
+			}
+		});
 		agregarbtn.setBounds(456, 82, 84, 20);
 		Ordenes.add(agregarbtn);
 		
@@ -154,29 +154,41 @@ public class VentanaInterfaz {
 		Ordenes.add(editarbtn);
 		
 		JButton borrarbtn = new JButton("Borrar");
+		borrarbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				borrarOrden();
+			}
+		});
 		borrarbtn.setBounds(456, 166, 84, 20);
 		Ordenes.add(borrarbtn);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 10, 437, 229);
-		Ordenes.add(scrollPane);
+		JScrollPane scrollPaneOrd = new JScrollPane();
+		scrollPaneOrd.addContainerListener(new ContainerAdapter() {
+			@Override
+			public void componentAdded(ContainerEvent e) {
+				cargarOrdenes();
+			}
+		});
+		scrollPaneOrd.setBounds(10, 10, 437, 229);
+		Ordenes.add(scrollPaneOrd);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
+		tablaOrdenes = new JTable();
+		tablaOrdenes.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
 				"N\u00FAmero", "Fecha", "Estado"
 			}
 		));
-		scrollPane.setViewportView(table);
+		tablaOrdenes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPaneOrd.setViewportView(tablaOrdenes);
 		
 		JLabel lblNewLabel_1 = new JLabel("Total pendiente: ₡");
-		lblNewLabel_1.setBounds(24, 253, 96, 12);
+		lblNewLabel_1.setBounds(24, 253, 116, 12);
 		Ordenes.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("temp");
-		lblNewLabel_2.setBounds(123, 253, 44, 12);
+		lblNewLabel_2.setBounds(130, 253, 44, 12);
 		Ordenes.add(lblNewLabel_2);
 		
 		JPanel Productos = new JPanel();
@@ -359,5 +371,44 @@ public class VentanaInterfaz {
 				}
 			}
 		}
+	}
+	
+	private void borrarOrden() {
+		int numeroFila = tablaOrdenes.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frame, "Debe seleccionar una orden", "Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			DefaultTableModel model = (DefaultTableModel) tablaOrdenes.getModel();
+			Integer numero = (Integer) model.getValueAt(numeroFila, 0);
+			String fecha = (String) model.getValueAt(numeroFila, 1);
+			String estado = (String) model.getValueAt(numeroFila, 1);
+			int respuesta = JOptionPane.showConfirmDialog(frame, "Se eliminará la orden número " + numero, "Confirmar", JOptionPane.YES_NO_OPTION);
+			if (respuesta == JOptionPane.YES_OPTION) {
+				ControladoraWallRose control = ControladoraWallRose.getInstance();
+				try {
+					control.borrarProducto(numero);
+					cargarProductos();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(frame, "Error al borrar el producto", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+	}
+	
+	private void cargarOrdenes() {
+		ControladoraWallRose control = ControladoraWallRose.getInstance();
+		DefaultTableModel model = (DefaultTableModel) tablaOrdenes.getModel();
+		model.setRowCount(0);
+		List<Orden> listaOrden = control.obtenerListadoOrdenes();
+		for (Orden orden: listaOrden) {
+			Object[] fila = new Object[] {orden.getNumero(), orden.getFecha(), orden.getEstado()};
+			model.addRow(fila);
+		}
+	}
+	
+	private void agregarOrden() {
+		SelectClient ventanaDetalleCliente = new SelectClient();
+		ventanaDetalleCliente.setVisible(true);
+		cargarClientes();
 	}
 }

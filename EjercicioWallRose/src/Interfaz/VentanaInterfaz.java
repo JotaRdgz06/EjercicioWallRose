@@ -32,6 +32,7 @@ public class VentanaInterfaz {
 	private JTable tableCliente;
 	private JTable tablaProducto;
 	private JScrollPane scrollPaneProducto;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -142,6 +143,41 @@ public class VentanaInterfaz {
 		
 		JPanel Ordenes = new JPanel();
 		tabbedPane.addTab("Ordenes", null, Ordenes, null);
+		Ordenes.setLayout(null);
+		
+		JButton agregarbtn = new JButton("Agregar");
+		agregarbtn.setBounds(456, 82, 84, 20);
+		Ordenes.add(agregarbtn);
+		
+		JButton editarbtn = new JButton("Editar");
+		editarbtn.setBounds(456, 124, 84, 20);
+		Ordenes.add(editarbtn);
+		
+		JButton borrarbtn = new JButton("Borrar");
+		borrarbtn.setBounds(456, 166, 84, 20);
+		Ordenes.add(borrarbtn);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 10, 437, 229);
+		Ordenes.add(scrollPane);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"N\u00FAmero", "Fecha", "Estado"
+			}
+		));
+		scrollPane.setViewportView(table);
+		
+		JLabel lblNewLabel_1 = new JLabel("Total pendiente: ₡");
+		lblNewLabel_1.setBounds(24, 253, 96, 12);
+		Ordenes.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("temp");
+		lblNewLabel_2.setBounds(123, 253, 44, 12);
+		Ordenes.add(lblNewLabel_2);
 		
 		JPanel Productos = new JPanel();
 		Productos.addComponentListener(new ComponentAdapter() {

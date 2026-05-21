@@ -122,7 +122,7 @@ public class VerCliente extends JDialog {
 		btnNewButton_3.setBounds(309, 215, 105, 20);
 		getContentPane().add(btnNewButton_3);
 		
-		JLabel lblNewLabel_7 = new JLabel("Total pendiente:");
+		JLabel lblNewLabel_7 = new JLabel("Total pendiente: ₡");
 		lblNewLabel_7.setBounds(32, 268, 98, 12);
 		getContentPane().add(lblNewLabel_7);
 		

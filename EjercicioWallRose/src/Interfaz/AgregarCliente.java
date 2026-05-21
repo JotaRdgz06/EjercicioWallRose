@@ -64,7 +64,7 @@ public class AgregarCliente extends JDialog {
 		}
 		{
 			JLabel lblNewLabel_2 = new JLabel("Nombre:");
-			lblNewLabel_2.setBounds(20, 122, 44, 12);
+			lblNewLabel_2.setBounds(20, 122, 54, 12);
 			contentPanel.add(lblNewLabel_2);
 		}
 		{
@@ -80,7 +80,7 @@ public class AgregarCliente extends JDialog {
 		}
 		{
 			textFieldNombre = new JTextField();
-			textFieldNombre.setBounds(67, 119, 192, 18);
+			textFieldNombre.setBounds(76, 119, 183, 18);
 			contentPanel.add(textFieldNombre);
 			textFieldNombre.setColumns(10);
 		}

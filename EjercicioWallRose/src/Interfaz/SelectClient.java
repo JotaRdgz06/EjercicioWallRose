@@ -18,6 +18,8 @@ import Control.ControladoraWallRose;
 import Logica.Cliente;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class SelectClient extends JDialog {
 
@@ -80,6 +82,11 @@ public class SelectClient extends JDialog {
 		scrollPane.setViewportView(table);
 		
 		JButton btncrear = new JButton("Crear orden");
+		btncrear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mostrarDetalles();
+			}
+		});
 		btncrear.setBounds(293, 221, 122, 20);
 		contentPanel.add(btncrear);
 		cargarClientes();
@@ -94,5 +101,11 @@ public class SelectClient extends JDialog {
 			Object[] fila = new Object[] {cliente.getId(), cliente.getNombre()};
 			model.addRow(fila);
 		}
+	}
+	
+	private void mostrarDetalles() {
+		DetalleOrdenCompra ventanaDetalleCliente = new DetalleOrdenCompra();
+		ventanaDetalleCliente.setVisible(true);
+		cargarClientes();
 	}
 }

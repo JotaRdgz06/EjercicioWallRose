@@ -254,4 +254,8 @@ public class ControladoraWallRose {
     	cliente.borrarOrden(orden);
     	ordenes.remove(numeroOrden);
     }
+    
+    public Integer obtenerSiguienteCodigoProducto() {
+        return consecutivoProducto;
+    }
 }

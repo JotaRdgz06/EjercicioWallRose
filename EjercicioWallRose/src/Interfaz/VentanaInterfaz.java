@@ -171,7 +171,7 @@ public class VentanaInterfaz {
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				String.class, Object.class, String.class, String.class, String.class
+				Integer.class, Object.class, String.class, String.class, String.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
@@ -180,14 +180,32 @@ public class VentanaInterfaz {
 		scrollPane_1.setViewportView(tablaProducto);
 		
 		JButton agregarProd = new JButton("Agregar");
+		agregarProd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				agregarProducto();
+				cargarProductos();
+			}
+		});
 		agregarProd.setBounds(462, 48, 93, 20);
 		Productos.add(agregarProd);
 		
 		JButton editarProd = new JButton("Editar");
+		editarProd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editarProducto();
+				cargarProductos();
+			}
+		});
 		editarProd.setBounds(462, 84, 93, 20);
 		Productos.add(editarProd);
 		
 		JButton borrarProd = new JButton("Borrar");
+		borrarProd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				borrarProducto();
+				cargarProductos();
+			}
+		});
 		borrarProd.setBounds(462, 121, 93, 20);
 		Productos.add(borrarProd);
 	}
@@ -264,6 +282,46 @@ public class VentanaInterfaz {
 		for (Producto producto : listaProducto) {
 			Object[] fila = new Object[] {producto.getCodigo(), producto.getNombre(), producto.getExistencias(), producto.getUnidad(), producto.getPrecio()};
 			model.addRow(fila);
+		}
+	}
+	
+	private void agregarProducto() {
+		DetallesProducto ventana = new DetallesProducto();
+		ventana.setVisible(true);
+		cargarProductos();
+	}
+	
+	private void editarProducto() {
+		int numeroFila = tablaProducto.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frame, "Debe seleccionar un producto", "Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			DefaultTableModel model = (DefaultTableModel) tablaProducto.getModel();
+			Integer codigo = (Integer) model.getValueAt(numeroFila, 0);
+			DetallesProducto ventana = new DetallesProducto(codigo);
+			ventana.setVisible(true);
+			cargarProductos();
+		}
+	}
+	
+	private void borrarProducto() {
+		int numeroFila = tablaProducto.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frame, "Debe seleccionar un producto", "Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			DefaultTableModel model = (DefaultTableModel) tablaProducto.getModel();
+			Integer codigo = (Integer) model.getValueAt(numeroFila, 0);
+			String nombre = (String) model.getValueAt(numeroFila, 1);
+			int respuesta = JOptionPane.showConfirmDialog(frame, "Se eliminará el producto: " + nombre + " código: " + codigo, "Confirmar", JOptionPane.YES_NO_OPTION);
+			if (respuesta == JOptionPane.YES_OPTION) {
+				ControladoraWallRose control = ControladoraWallRose.getInstance();
+				try {
+					control.borrarProducto(codigo);
+					cargarProductos();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(frame, "Error al borrar el producto", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		}
 	}
 }

@@ -400,16 +400,14 @@ public class VentanaInterfaz {
 		} else {
 			DefaultTableModel model = (DefaultTableModel) tablaOrdenes.getModel();
 			Integer numero = (Integer) model.getValueAt(numeroFila, 0);
-			String fecha = (String) model.getValueAt(numeroFila, 1);
-			String estado = (String) model.getValueAt(numeroFila, 1);
 			int respuesta = JOptionPane.showConfirmDialog(frame, "Se eliminará la orden número " + numero, "Confirmar", JOptionPane.YES_NO_OPTION);
 			if (respuesta == JOptionPane.YES_OPTION) {
 				ControladoraWallRose control = ControladoraWallRose.getInstance();
 				try {
-					control.borrarOrden	(numero);
-					cargarProductos();
+					control.borrarOrden(numero);
+					cargarOrdenes();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(frame, "Error al borrar el producto", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frame, "Error al borrar la orden", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -433,15 +431,15 @@ public class VentanaInterfaz {
 	}
 	
 	private void editarOrden() {
-		int numeroFila = tablaOrdenes.getSelectedRow();
-		if (numeroFila == -1) {
-			JOptionPane.showMessageDialog(frame, "Debe seleccionar una orden", "Error", JOptionPane.ERROR_MESSAGE);
-		} else {
-			DefaultTableModel model = (DefaultTableModel) tableCliente.getModel();
-			String numOrden = (String) model.getValueAt(numeroFila, 0);
-			DetalleOrdenCompra ventana = new DetalleOrdenCompra(numOrden);
-			ventana.setVisible(true); 
-			cargarClientes();
-		}
+	    int numeroFila = tablaOrdenes.getSelectedRow();
+	    if (numeroFila == -1) {
+	        JOptionPane.showMessageDialog(frame, "Debe seleccionar una orden", "Error", JOptionPane.ERROR_MESSAGE);
+	    } else {
+	        DefaultTableModel model = (DefaultTableModel) tablaOrdenes.getModel();
+	        Integer numOrden = (Integer) model.getValueAt(numeroFila, 0);
+	        DetalleOrdenCompra ventana = new DetalleOrdenCompra(numOrden);
+	        ventana.setVisible(true); 
+	        cargarOrdenes();
+	    }
 	}
 }

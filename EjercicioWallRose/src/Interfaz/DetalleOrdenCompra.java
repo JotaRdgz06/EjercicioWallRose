@@ -51,8 +51,29 @@ public class DetalleOrdenCompra extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
+	
 	public DetalleOrdenCompra(String idCliente) {
-		this.idCliente = idCliente;
+        this.idCliente = idCliente;
+        ventana(numeroOrden);
+        crearOrden();
+        cargarDatosOrden();
+    }
+	
+	public DetalleOrdenCompra(Integer numeroOrden) {
+	    ControladoraWallRose control = ControladoraWallRose.getInstance();
+	    try {
+	        Orden orden = control.obtenerOrden(numeroOrden);
+	        this.numeroOrden = numeroOrden;
+	        this.idCliente = orden.getCliente().getId();
+	        ventana(numeroOrden);
+	        cargarDatosOrden();
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(null, "No se encontró la orden", "Error", JOptionPane.ERROR_MESSAGE);
+	        dispose();
+	    }
+	}
+	
+	public void ventana(Integer numeroOrden) {
 		setModal(true);
 		setBounds(100, 100, 450, 375);
 		getContentPane().setLayout(new BorderLayout());
@@ -196,8 +217,6 @@ public class DetalleOrdenCompra extends JDialog {
 			lblNewLabel_12.setBounds(10, 56, 70, 12);
 			contentPanel.add(lblNewLabel_12);
 		}
-		crearOrden();
-		cargarDatosOrden();
 	}
 	
 	private void crearOrden() {

@@ -25,15 +25,22 @@ public class DetalleOrdenCompra extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
-	private String idCliente;
+	private static String idCliente;
 	private Integer numeroOrden;	
+	private JLabel id;
+	private JLabel lblNewLabel_1;
+	private JLabel lblNewLabel_2;
+	private JLabel numorden;
+	private JLabel lblNewLabel_4;
+	private JLabel lblNewLabel_6;
+	private JLabel lblNewLabel_8;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			DetalleOrdenCompra dialog = new DetalleOrdenCompra();
+			DetalleOrdenCompra dialog = new DetalleOrdenCompra(idCliente);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -44,7 +51,7 @@ public class DetalleOrdenCompra extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DetalleOrdenCompra() {
+	public DetalleOrdenCompra(String idCliente) {
 		this.idCliente = idCliente;
 		setModal(true);
 		setBounds(100, 100, 450, 375);
@@ -58,14 +65,14 @@ public class DetalleOrdenCompra extends JDialog {
 			contentPanel.add(lblNewLabel);
 		}
 		{
-			JLabel tempid = new JLabel("tempID");
-			tempid.setBounds(10, 50, 44, 12);
-			contentPanel.add(tempid);
+			id = new JLabel("tempID");
+			id.setBounds(41, 38, 97, 12);
+			contentPanel.add(id);
 		}
 		{
-			JLabel lblNewLabel_2 = new JLabel("tempNom");
-			lblNewLabel_2.setBounds(69, 50, 44, 12);
-			contentPanel.add(lblNewLabel_2);
+			lblNewLabel_1 = new JLabel("tempNom");
+			lblNewLabel_1.setBounds(64, 56, 71, 12);
+			contentPanel.add(lblNewLabel_1);
 		}
 		{
 			JLabel lblNewLabel_3 = new JLabel("Número de orden:");
@@ -73,9 +80,9 @@ public class DetalleOrdenCompra extends JDialog {
 			contentPanel.add(lblNewLabel_3);
 		}
 		{
-			JLabel lblNewLabel_4 = new JLabel("tempNum");
-			lblNewLabel_4.setBounds(106, 78, 44, 12);
-			contentPanel.add(lblNewLabel_4);
+			numorden = new JLabel("tempNum");
+			numorden.setBounds(124, 78, 44, 12);
+			contentPanel.add(numorden);
 		}
 		{
 			JLabel lblNewLabel_5 = new JLabel("Estado:");
@@ -83,9 +90,9 @@ public class DetalleOrdenCompra extends JDialog {
 			contentPanel.add(lblNewLabel_5);
 		}
 		{
-			JLabel lblNewLabel_6 = new JLabel("tempEstado");
-			lblNewLabel_6.setBounds(331, 78, 71, 12);
-			contentPanel.add(lblNewLabel_6);
+			lblNewLabel_2 = new JLabel("tempEstado");
+			lblNewLabel_2.setBounds(318, 78, 71, 12);
+			contentPanel.add(lblNewLabel_2);
 		}
 		{
 			JButton btnagregar = new JButton("Agregar");
@@ -135,9 +142,9 @@ public class DetalleOrdenCompra extends JDialog {
 			contentPanel.add(lblNewLabel_7);
 		}
 		{
-			JLabel lblNewLabel_8 = new JLabel("₡0");
-			lblNewLabel_8.setBounds(221, 272, 78, 12);
-			contentPanel.add(lblNewLabel_8);
+			lblNewLabel_4 = new JLabel("₡0");
+			lblNewLabel_4.setBounds(221, 272, 78, 12);
+			contentPanel.add(lblNewLabel_4);
 		}
 		{
 			JLabel lblNewLabel_9 = new JLabel("Impuesto: ");
@@ -145,9 +152,9 @@ public class DetalleOrdenCompra extends JDialog {
 			contentPanel.add(lblNewLabel_9);
 		}
 		{
-			JLabel lblNewLabel_10 = new JLabel("₡0");
-			lblNewLabel_10.setBounds(221, 294, 68, 12);
-			contentPanel.add(lblNewLabel_10);
+			lblNewLabel_6 = new JLabel("₡0");
+			lblNewLabel_6.setBounds(221, 294, 68, 12);
+			contentPanel.add(lblNewLabel_6);
 		}
 		{
 			JLabel lblNewLabel_11 = new JLabel("Total: ");
@@ -155,9 +162,9 @@ public class DetalleOrdenCompra extends JDialog {
 			contentPanel.add(lblNewLabel_11);
 		}
 		{
-			JLabel lblNewLabel_12 = new JLabel("₡0");
-			lblNewLabel_12.setBounds(221, 316, 78, 12);
-			contentPanel.add(lblNewLabel_12);
+			lblNewLabel_8 = new JLabel("₡0");
+			lblNewLabel_8.setBounds(221, 316, 78, 12);
+			contentPanel.add(lblNewLabel_8);
 		}
 		{
 			JButton btnNewButton = new JButton("Pendiente");
@@ -179,6 +186,16 @@ public class DetalleOrdenCompra extends JDialog {
 			btnNewButton_1.setBounds(318, 293, 97, 20);
 			contentPanel.add(btnNewButton_1);
 		}
+		{
+			JLabel lblNewLabel_10 = new JLabel("ID: ");
+			lblNewLabel_10.setBounds(10, 38, 44, 12);
+			contentPanel.add(lblNewLabel_10);
+		}
+		{
+			JLabel lblNewLabel_12 = new JLabel("Nombre:");
+			lblNewLabel_12.setBounds(10, 56, 70, 12);
+			contentPanel.add(lblNewLabel_12);
+		}
 		crearOrden();
 		cargarDatosOrden();
 	}
@@ -199,15 +216,41 @@ public class DetalleOrdenCompra extends JDialog {
 	    ControladoraWallRose control = ControladoraWallRose.getInstance();
 	    try {
 	        Cliente cliente = control.obtenerCliente(idCliente);
-	        tempid.setText(cliente.getId());
-	        lblNombreCliente.setText(cliente.getNombre());
+	        id.setText(cliente.getId());
+	        lblNewLabel_1.setText(cliente.getNombre());
 
 	        Orden orden = control.obtenerOrden(numeroOrden);
-	        lblNumeroOrden.setText(String.valueOf(numeroOrden));
-	        lblEstado.setText(orden.getEstado().toString());
+	        numorden.setText(String.valueOf(numeroOrden));
+	        lblNewLabel_2.setText(orden.getEstado().toString());
 	        actualizarTotales(orden);
 	    } catch (Exception e) {
-	        JOptionPane.showMessageDialog(contentPanel, "Error al cargar los datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        JOptionPane.showMessageDialog(contentPanel, "Error al cargar los datos", "Error", JOptionPane.ERROR_MESSAGE);
 	    }
+	}
+	
+	private void actualizarTotales(Orden orden) {
+		lblNewLabel_4.setText(String.format("₡%.2f", orden.calcularMonto()));
+		lblNewLabel_6.setText(String.format("₡%.2f", orden.calcularMontoImpuesto()));
+		lblNewLabel_8.setText(String.format("₡%.2f", orden.calcularMontoTotal()));
+	}
+	
+	private void cambiarAPendiente() {
+		ControladoraWallRose control = ControladoraWallRose.getInstance();
+		try {
+			control.establecerOrdenPendiente(numeroOrden);
+			lblNewLabel_2.setText("PENDIENTE");
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(contentPanel, "Error al cambiar estado", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void cambiarATerminada() {
+		ControladoraWallRose control = ControladoraWallRose.getInstance();
+		try {
+			control.establecerOrdenTerminada(numeroOrden);
+			lblNewLabel_2.setText("TERMINADA");
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(contentPanel, "Error al cambiar estado", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }

@@ -150,6 +150,11 @@ public class VentanaInterfaz {
 		Ordenes.add(agregarbtn);
 		
 		JButton editarbtn = new JButton("Editar");
+		editarbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editarOrden();
+			}
+		});
 		editarbtn.setBounds(456, 124, 84, 20);
 		Ordenes.add(editarbtn);
 		
@@ -179,7 +184,15 @@ public class VentanaInterfaz {
 			new String[] {
 				"N\u00FAmero", "Fecha", "Estado"
 			}
-		));
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, true, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		tablaOrdenes.getColumnModel().getColumn(0).setResizable(false);
 		tablaOrdenes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPaneOrd.setViewportView(tablaOrdenes);
 		
@@ -224,7 +237,14 @@ public class VentanaInterfaz {
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
+			boolean[] columnEditables = new boolean[] {
+				false, true, true, true, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
 		});
+		tablaProducto.getColumnModel().getColumn(0).setResizable(false);
 		scrollPane_1.setViewportView(tablaProducto);
 		
 		JButton agregarProd = new JButton("Agregar");
@@ -386,7 +406,7 @@ public class VentanaInterfaz {
 			if (respuesta == JOptionPane.YES_OPTION) {
 				ControladoraWallRose control = ControladoraWallRose.getInstance();
 				try {
-					control.borrarProducto(numero);
+					control.borrarOrden	(numero);
 					cargarProductos();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(frame, "Error al borrar el producto", "Error", JOptionPane.ERROR_MESSAGE);
@@ -409,6 +429,19 @@ public class VentanaInterfaz {
 	private void agregarOrden() {
 		SelectClient ventanaDetalleCliente = new SelectClient();
 		ventanaDetalleCliente.setVisible(true);
-		cargarClientes();
+		cargarOrdenes();
+	}
+	
+	private void editarOrden() {
+		int numeroFila = tablaOrdenes.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frame, "Debe seleccionar una orden", "Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			DefaultTableModel model = (DefaultTableModel) tableCliente.getModel();
+			String numOrden = (String) model.getValueAt(numeroFila, 0);
+			DetalleOrdenCompra ventana = new DetalleOrdenCompra(numOrden);
+			ventana.setVisible(true); 
+			cargarClientes();
+		}
 	}
 }

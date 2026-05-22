@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
@@ -104,8 +105,15 @@ public class SelectClient extends JDialog {
 	}
 	
 	private void mostrarDetalles() {
-		DetalleOrdenCompra ventanaDetalleCliente = new DetalleOrdenCompra();
-		ventanaDetalleCliente.setVisible(true);
-		cargarClientes();
+		int fila = table.getSelectedRow();
+		if (fila == -1) {
+			JOptionPane.showMessageDialog(contentPanel, "Debe seleccionar un cliente", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		String idCliente = (String) model.getValueAt(fila, 0);
+ 
+		DetalleOrdenCompra ventana = new DetalleOrdenCompra(idCliente);
+		ventana.setVisible(true);
+		dispose();
 	}
 }

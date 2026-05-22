@@ -82,11 +82,11 @@ public class DetallesProducto extends JDialog {
         contentPanel.add(textnombre);
 
         JLabel lblExist = new JLabel("Existencias:");
-        lblExist.setBounds(10, 117, 67, 12);
+        lblExist.setBounds(10, 117, 85, 12);
         contentPanel.add(lblExist);
 
         textexist = new JTextField();
-        textexist.setBounds(81, 114, 164, 18);
+        textexist.setBounds(95, 114, 150, 18);
         textexist.setColumns(10);
         contentPanel.add(textexist);
 

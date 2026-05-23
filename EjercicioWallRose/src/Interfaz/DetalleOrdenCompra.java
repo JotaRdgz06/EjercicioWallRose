@@ -17,6 +17,8 @@ import javax.swing.table.DefaultTableModel;
 import Control.ControladoraWallRose;
 import Logica.Cliente;
 import Logica.Orden;
+import Logica.Producto;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -50,6 +52,7 @@ public class DetalleOrdenCompra extends JDialog {
 
 	/**
 	 * Create the dialog.
+	 * @wbp.parser.constructor
 	 */
 	
 	public DetalleOrdenCompra(String idCliente) {
@@ -117,6 +120,11 @@ public class DetalleOrdenCompra extends JDialog {
 		}
 		{
 			JButton btnagregar = new JButton("Agregar");
+			btnagregar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					agregarProducto();
+				}
+			});
 			btnagregar.setBounds(331, 112, 84, 20);
 			contentPanel.add(btnagregar);
 		}
@@ -270,6 +278,23 @@ public class DetalleOrdenCompra extends JDialog {
 			lblNewLabel_2.setText("TERMINADA");
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(contentPanel, "Error al cambiar estado", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void agregarProducto() {
+		LineaOrden ventana = new LineaOrden();
+		ventana.setVisible(true);
+		cargarProductos();
+	}
+	
+	private void cargarProductos() {
+		ControladoraWallRose control = ControladoraWallRose.getInstance();
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		model.setRowCount(0);
+		List<Producto> listaProducto = control.obtenerListadoProductos();
+		for (Producto producto : listaProducto) {
+			Object[] fila = new Object[] {producto.getCodigo(), producto.getNombre(), producto.getExistencias(), producto.getUnidad(), producto.getPrecio()};
+			model.addRow(fila);
 		}
 	}
 }

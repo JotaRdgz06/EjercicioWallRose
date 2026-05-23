@@ -238,6 +238,9 @@ public class VentanaInterfaz {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cargarDatos();
+				cargarProductos();
+				cargarClientes();
+				cargarOrdenes();
 			}
 		});
 		btnNewButton_1.setBounds(432, 238, 103, 20);

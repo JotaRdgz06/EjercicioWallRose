@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -130,6 +131,10 @@ public class DetalleOrdenCompra extends JDialog {
 		}
 		{
 			JButton btneditar = new JButton("Editar");
+			btneditar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				}
+			});
 			btneditar.setBounds(331, 142, 84, 20);
 			contentPanel.add(btneditar);
 		}
@@ -162,6 +167,7 @@ public class DetalleOrdenCompra extends JDialog {
 				table.getColumnModel().getColumn(1).setPreferredWidth(216);
 				table.getColumnModel().getColumn(2).setPreferredWidth(118);
 				table.getColumnModel().getColumn(3).setPreferredWidth(136);
+				table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				scrollPane.setViewportView(table);
 			}
 		}
@@ -250,6 +256,7 @@ public class DetalleOrdenCompra extends JDialog {
 	        numorden.setText(String.valueOf(numeroOrden));
 	        lblNewLabel_2.setText(orden.getEstado().toString());
 	        actualizarTotales(orden);
+	        cargarProductos();
 	    } catch (Exception e) {
 	        JOptionPane.showMessageDialog(contentPanel, "Error al cargar los datos", "Error", JOptionPane.ERROR_MESSAGE);
 	    }
@@ -282,19 +289,28 @@ public class DetalleOrdenCompra extends JDialog {
 	}
 	
 	private void agregarProducto() {
-		LineaOrden ventana = new LineaOrden();
+		LineaOrdenInter ventana = new LineaOrdenInter(numeroOrden);
 		ventana.setVisible(true);
 		cargarProductos();
 	}
 	
 	private void cargarProductos() {
-		ControladoraWallRose control = ControladoraWallRose.getInstance();
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		model.setRowCount(0);
-		List<Producto> listaProducto = control.obtenerListadoProductos();
-		for (Producto producto : listaProducto) {
-			Object[] fila = new Object[] {producto.getCodigo(), producto.getNombre(), producto.getExistencias(), producto.getUnidad(), producto.getPrecio()};
-			model.addRow(fila);
-		}
+	    ControladoraWallRose control = ControladoraWallRose.getInstance();
+	    DefaultTableModel model = (DefaultTableModel) table.getModel();
+	    model.setRowCount(0);
+	    try {
+	        List<Logica.LineaOrden> lineas = control.obtenerLineasOrden(numeroOrden);
+	        for (Logica.LineaOrden linea : lineas) {
+	            Object[] fila = new Object[] {
+	                linea.getProducto().getCodigo(), linea.getProducto().getNombre(), linea.getCantidad(), String.format("₡%.2f", linea.calcularCosto())
+	            };
+	            model.addRow(fila);
+	        }
+	        Orden orden = control.obtenerOrden(numeroOrden);
+	        actualizarTotales(orden);
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(contentPanel,
+	            "Error al cargar líneas de la orden", "Error", JOptionPane.ERROR_MESSAGE);
+	    }
 	}
 }

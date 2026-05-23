@@ -1,5 +1,11 @@
 package Control;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -7,7 +13,7 @@ import java.util.TreeMap;
 
 import Logica.*;
 
-public class ControladoraWallRose {
+public class ControladoraWallRose implements Serializable {
 	
 	private static ControladoraWallRose instance;
 	
@@ -257,5 +263,21 @@ public class ControladoraWallRose {
     
     public Integer obtenerSiguienteCodigoProducto() {
         return consecutivoProducto;
+    }
+    
+    public static void guardarDatos() throws IOException {
+    	FileOutputStream file = new FileOutputStream("DatosWallRose.dat");
+    	ObjectOutputStream stream = new ObjectOutputStream(file);
+    	stream.writeObject(instance);
+    	stream.close();
+    	file.close();
+    }
+    
+    public static void cargarDatos() throws IOException, ClassNotFoundException {
+    	FileInputStream file = new FileInputStream("DatosWallRose.dat");
+    	ObjectInputStream stream = new ObjectInputStream(file);
+    	instance = (ControladoraWallRose) stream.readObject();
+    	stream.close();
+    	file.close();
     }
 }

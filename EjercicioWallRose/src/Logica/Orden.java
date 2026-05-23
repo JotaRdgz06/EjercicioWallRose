@@ -1,13 +1,14 @@
 package Logica;
 
 import java.util.List;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 
-public class Orden {
+public class Orden implements Serializable{
 	private Integer numero;
 	private LocalDateTime fecha;
-	private double IV;
+	private final static Double IV = 0.13;
 	private List<LineaOrden> lineas;
 	private Cliente cliente;
 	private EstadoOrden estado;
@@ -16,7 +17,6 @@ public class Orden {
 		super();
 		this.numero = numero;
 		this.fecha = LocalDateTime.now();
-		IV = 0.13;
 		this.lineas = new LinkedList<>();
 		this.cliente = cliente;
 		this.estado = EstadoOrden.INICIADA;

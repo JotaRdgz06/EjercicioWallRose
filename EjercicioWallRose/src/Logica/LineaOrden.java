@@ -1,9 +1,10 @@
 package Logica;
 
-public class LineaOrden {
+import java.io.Serializable;
+
+public class LineaOrden implements Serializable{
 	private double cantidad;
 	private Producto producto;
-	
 	public LineaOrden(Producto producto, double cantidad) {
 		this.cantidad = cantidad;
 		this.producto = producto;

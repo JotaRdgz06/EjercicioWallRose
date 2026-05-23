@@ -19,6 +19,8 @@ import Control.ControladoraWallRose;
 import Logica.Producto;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class LineaOrden extends JDialog {
 
@@ -26,6 +28,7 @@ public class LineaOrden extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
 	private JTextField textField;
+	private Integer numeroOrden;
 
 	/**
 	 * Launch the application.
@@ -102,6 +105,10 @@ public class LineaOrden extends JDialog {
 		textField.setColumns(10);
 		
 		JButton btnNewButton = new JButton("Agregar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnNewButton.setBounds(342, 230, 84, 20);
 		contentPanel.add(btnNewButton);
 		cargarProductos();

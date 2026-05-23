@@ -27,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JTree;
 import java.awt.event.ContainerAdapter;
 import java.awt.event.ContainerEvent;
+import java.io.IOException;
 
 public class VentanaInterfaz {
 
@@ -223,6 +224,24 @@ public class VentanaInterfaz {
 		Productos.add(scrollPane_1);
 		
 		tableCliente.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		JButton btnNewButton = new JButton("Guardar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				guardarDatos();
+			}
+		});
+		btnNewButton.setBounds(432, 208, 103, 20);
+		Clientes.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("Cargar");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cargarDatos();
+			}
+		});
+		btnNewButton_1.setBounds(432, 238, 103, 20);
+		Clientes.add(btnNewButton_1);
 		tablaProducto = new JTable();
 		tablaProducto.setModel(new DefaultTableModel(
 			new Object[][] {
@@ -441,5 +460,21 @@ public class VentanaInterfaz {
 	        ventana.setVisible(true); 
 	        cargarOrdenes();
 	    }
+	}
+	
+	private void cargarDatos() {
+		try {
+			ControladoraWallRose.cargarDatos();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(frame, "Error al cargar los datos" + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void guardarDatos() {
+		try {
+			ControladoraWallRose.guardarDatos();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(frame, "Error al guardar los datos: " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }

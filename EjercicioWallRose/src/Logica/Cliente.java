@@ -1,9 +1,10 @@
 package Logica;
  
+import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
  
-public class Cliente {
+public class Cliente implements Serializable {
  
     private String id;
     private String nombre;

@@ -242,12 +242,14 @@ public class ControladoraWallRose implements Serializable {
     }
     
     public void borrarLineaOrden(Integer numeroOrden, Integer numeroLinea) throws Exception {
-    	if (!ordenes.containsKey(numeroLinea))
-    		throw new Exception("No se encontró la línea");
-    	if (!ordenes.containsKey(numeroOrden))
-    		throw new Exception("No se encontró la orden");
-    	
-    	Orden orden = ordenes.get(numeroOrden);
+        if (!ordenes.containsKey(numeroOrden))
+            throw new Exception("No se encontró la orden");
+        
+        Orden orden = ordenes.get(numeroOrden);
+        List<LineaOrden> lineas = orden.getLineas();
+        if (numeroLinea < 0 || numeroLinea >= lineas.size())
+            throw new Exception("Índice de línea inválido");
+        
         orden.borrarLinea(numeroLinea);
     }
     

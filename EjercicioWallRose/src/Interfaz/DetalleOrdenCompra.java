@@ -140,6 +140,11 @@ public class DetalleOrdenCompra extends JDialog {
 		}
 		{
 			JButton btnborrar = new JButton("Borrar");
+			btnborrar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					borrarLinea();
+				}
+			});
 			btnborrar.setBounds(331, 172, 84, 20);
 			contentPanel.add(btnborrar);
 		}
@@ -311,6 +316,26 @@ public class DetalleOrdenCompra extends JDialog {
 	    } catch (Exception e) {
 	        JOptionPane.showMessageDialog(contentPanel,
 	            "Error al cargar líneas de la orden", "Error", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+	
+	private void borrarLinea() {
+		int numeroFila = table.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(contentPanel, "Debe seleccionar una orden", "Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			DefaultTableModel model = (DefaultTableModel) table.getModel();
+			Integer numero = (Integer) model.getValueAt(numeroFila, 0);
+			int respuesta = JOptionPane.showConfirmDialog(contentPanel, "Se eliminará la orden número " + numero, "Confirmar", JOptionPane.YES_NO_OPTION);
+	        if (respuesta == JOptionPane.YES_OPTION) {
+	            ControladoraWallRose control = ControladoraWallRose.getInstance();
+	            try {
+	                control.borrarLineaOrden(numeroOrden, numeroFila);
+	                cargarProductos();
+	            } catch (Exception e) {
+	                JOptionPane.showMessageDialog(contentPanel, "Error al borrar la línea", "Error", JOptionPane.ERROR_MESSAGE);
+	            }
+	        }
 	    }
 	}
 }

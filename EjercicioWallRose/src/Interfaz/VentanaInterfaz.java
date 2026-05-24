@@ -36,6 +36,7 @@ public class VentanaInterfaz {
 	private JTable tablaProducto;
 	private JScrollPane scrollPaneProducto;
 	private JTable tablaOrdenes;
+	private JLabel totalTotal;
 
 	/**
 	 * Launch the application.
@@ -197,13 +198,13 @@ public class VentanaInterfaz {
 		tablaOrdenes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPaneOrd.setViewportView(tablaOrdenes);
 		
-		JLabel lblNewLabel_1 = new JLabel("Total pendiente: ₡");
+		JLabel lblNewLabel_1 = new JLabel("Total pendiente:");
 		lblNewLabel_1.setBounds(24, 253, 116, 12);
 		Ordenes.add(lblNewLabel_1);
 		
-		JLabel lblNewLabel_2 = new JLabel("temp");
-		lblNewLabel_2.setBounds(130, 253, 44, 12);
-		Ordenes.add(lblNewLabel_2);
+		totalTotal = new JLabel("₡0.00");
+		totalTotal.setBounds(130, 253, 104, 12);
+		Ordenes.add(totalTotal);
 		
 		JPanel Productos = new JPanel();
 		Productos.addComponentListener(new ComponentAdapter() {
@@ -358,7 +359,8 @@ public class VentanaInterfaz {
 		} else {
 			DefaultTableModel model = (DefaultTableModel) tableCliente.getModel();
 			String idCliente = (String) model.getValueAt(numeroFila, 0);
-			AgregarCliente ventana = new AgregarCliente(idCliente);
+			String nombreCliente = (String) model.getValueAt(numeroFila, 1);
+			AgregarCliente ventana = new AgregarCliente(idCliente, nombreCliente);
 			ventana.setVisible(true); 
 			cargarClientes();
 		}
@@ -439,11 +441,16 @@ public class VentanaInterfaz {
 		ControladoraWallRose control = ControladoraWallRose.getInstance();
 		DefaultTableModel model = (DefaultTableModel) tablaOrdenes.getModel();
 		model.setRowCount(0);
+		double totalPendiente = 0;
 		List<Orden> listaOrden = control.obtenerListadoOrdenes();
 		for (Orden orden: listaOrden) {
-			Object[] fila = new Object[] {orden.getNumero(), orden.getFecha(), orden.getEstado()};
+			Object[] fila = new Object[] {orden.getNumero(), orden.getFecha().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")), orden.getEstado()};
 			model.addRow(fila);
+			if (orden.getEstado() == Logica.EstadoOrden.PENDIENTE) {
+	            totalPendiente += orden.calcularMontoTotal();
+	        }
 		}
+		totalTotal.setText(String.format("₡%.2f", totalPendiente));
 	}
 	
 	private void agregarOrden() {

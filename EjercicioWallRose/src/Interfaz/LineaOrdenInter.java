@@ -142,18 +142,27 @@ public class LineaOrdenInter extends JDialog {
 	    double cantidad;
 	    try {
 	        cantidad = Double.parseDouble(cantidadTexto);
-	    } catch (NumberFormatException ex) {
+	        if (cantidad <= 0) {
+	        	JOptionPane.showMessageDialog(contentPanel, "La cantidad debe ser un número positivo", "Error", JOptionPane.ERROR_MESSAGE);
+	        	return;
+	        }
+	    } catch (Exception e) {
 	        JOptionPane.showMessageDialog(contentPanel, "La cantidad debe ser un número válido", "Error", JOptionPane.ERROR_MESSAGE);
 	        return;
-	    }
+	    }	
 	    DefaultTableModel model = (DefaultTableModel) table.getModel();
 	    Integer codigoProducto = Integer.valueOf(model.getValueAt(fila, 0).toString());
+	    double existencias = Double.parseDouble(model.getValueAt(fila, 3).toString());
+	    if (cantidad > existencias) {
+	    	JOptionPane.showMessageDialog(contentPanel, "La cantidad no puede superar las existencias", "Error", JOptionPane.ERROR_MESSAGE);
+	    	return;
+	    }
 	    ControladoraWallRose control = ControladoraWallRose.getInstance();
 	    try {
 	        control.agregarLineaOrden(numeroOrden, codigoProducto, cantidad);
 	        dispose();
-	    } catch (Exception ex) {
-	        JOptionPane.showMessageDialog(contentPanel, "Error al agregar el producto: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(contentPanel, "Error al agregar el producto: " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
 }

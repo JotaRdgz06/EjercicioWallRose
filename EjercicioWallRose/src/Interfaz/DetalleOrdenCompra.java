@@ -96,7 +96,7 @@ public class DetalleOrdenCompra extends JDialog {
 		}
 		{
 			lblNewLabel_1 = new JLabel("tempNom");
-			lblNewLabel_1.setBounds(64, 56, 71, 12);
+			lblNewLabel_1.setBounds(64, 56, 225, 12);
 			contentPanel.add(lblNewLabel_1);
 		}
 		{
@@ -337,5 +337,12 @@ public class DetalleOrdenCompra extends JDialog {
 	            }
 	        }
 	    }
+	}
+	
+	private void editarOrden() {
+		int numeroFila = table.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(contentPanel, "Debe seleccionar un producto", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }

@@ -83,7 +83,15 @@ public class VerCliente extends JDialog {
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
+			boolean[] columnEditables = new boolean[] {
+				false, true, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
 		});
+		tablaCliente.getColumnModel().getColumn(0).setResizable(false);
+		tablaCliente.getColumnModel().getColumn(0).setPreferredWidth(61);
 		scrollPane.setViewportView(tablaCliente);
 		
 		JButton btnNewButton = new JButton("Todas");
@@ -126,11 +134,12 @@ public class VerCliente extends JDialog {
 		lblNewLabel_7.setBounds(32, 268, 98, 12);
 		getContentPane().add(lblNewLabel_7);
 		
-		texpago = new JLabel("temp total");
-		texpago.setBounds(121, 268, 219, 12);
+		texpago = new JLabel("₡0.00");
+		texpago.setBounds(127, 268, 219, 12);
 		getContentPane().add(texpago);
 		
 		cargarDatosCliente();
+		cargarOrdenesCliente();
 	}
 	
 	private void filtrarIniciadas() {
@@ -155,7 +164,7 @@ public class VerCliente extends JDialog {
         try {
             List<Orden> ordenes = control.obtenerListadoOrdenesPendientesCliente(idCliente);
             for (Orden orden : ordenes) {
-                Object[] fila = new Object[] {orden.getNumero(), orden.getFecha(), orden.getEstado()};
+                Object[] fila = new Object[] {orden.getNumero(), orden.getFecha().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")), orden.getEstado()};
                 model.addRow(fila);
             }
         } catch (Exception e) {
@@ -170,7 +179,7 @@ public class VerCliente extends JDialog {
         try {
             List<Orden> ordenes = control.obtenerListadoOrdenesTerminadasCliente(idCliente);
             for (Orden orden : ordenes) {
-                Object[] fila = new Object[] {orden.getNumero(), orden.getFecha(), orden.getEstado()};
+                Object[] fila = new Object[] {orden.getNumero(), orden.getFecha().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")), orden.getEstado()};
                 model.addRow(fila);
             }
         } catch (Exception e) {
@@ -185,7 +194,7 @@ public class VerCliente extends JDialog {
         try {
             List<Orden> ordenes = control.obtenerListadoOrdenesCliente(idCliente);
             for (Orden orden : ordenes) {
-                Object[] fila = new Object[] {orden.getNumero(), orden.getFecha(), orden.getEstado()};
+                Object[] fila = new Object[] {orden.getNumero(), orden.getFecha().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")), orden.getEstado()};
                 model.addRow(fila);
             }
         } catch (Exception e) {
@@ -210,5 +219,21 @@ public class VerCliente extends JDialog {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "Error al cargar datos del cliente", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+	
+	private void cargarOrdenesCliente() {
+		ControladoraWallRose control = ControladoraWallRose.getInstance();
+		DefaultTableModel model = (DefaultTableModel) tablaCliente.getModel();
+		model.setRowCount(0);
+		double totalPendiente = 0;
+		List<Orden> listaOrden = control.obtenerListadoOrdenes();
+		for (Orden orden: listaOrden) {
+			Object[] fila = new Object[] {orden.getNumero(), orden.getFecha().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")), orden.getEstado()};
+			model.addRow(fila);
+			if (orden.getEstado() == Logica.EstadoOrden.PENDIENTE) {
+	            totalPendiente += orden.calcularMontoTotal();
+	        }
+		}
+		texpago.setText(String.format("₡%.2f", totalPendiente));
 	}
 }

@@ -22,6 +22,7 @@ public class AgregarCliente extends JDialog {
 	private JTextField textFieldNombre;
 	private JTextField textFieldEmail;
 	private String idClienteEditar;
+	private String nombreClienteEditar;
 
 	/**
 	 * Launch the application.
@@ -41,12 +42,13 @@ public class AgregarCliente extends JDialog {
 	 */
 	
 	public AgregarCliente() {
-        this(null);
+        this(null, null);
     }
-	public AgregarCliente(String idCliente) {
+	public AgregarCliente(String idCliente, String nombreCliente) {
 		setModal(true);
 		setResizable(false);
 		this.idClienteEditar = idCliente;
+		this.nombreClienteEditar = nombreCliente;
 		setBounds(100, 100, 308, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -108,10 +110,13 @@ public class AgregarCliente extends JDialog {
             	Cliente c = control.obtenerCliente(idCliente);
                 textFieldNombre.setText(c.getNombre());
                 textFieldEmail.setText(c.getEmail());
+                if (!c.getOrdenes().isEmpty()) {
+                    textFieldNombre.setEditable(false);
+                }
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(contentPanel, "No se pudo cargar el cliente", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }
+		}
     }
 	
 	private void botonGuardar() {

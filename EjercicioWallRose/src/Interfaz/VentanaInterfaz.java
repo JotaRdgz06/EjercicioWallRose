@@ -88,6 +88,7 @@ public class VentanaInterfaz {
 		Ver.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				verCliente();
+				cargarOrdenes();
 			}
 		});
 		Ver.setBounds(432, 10, 103, 20);

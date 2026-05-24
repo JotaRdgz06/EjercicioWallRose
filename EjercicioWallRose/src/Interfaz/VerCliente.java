@@ -235,5 +235,6 @@ public class VerCliente extends JDialog {
 	        }
 		}
 		texpago.setText(String.format("₡%.2f", totalPendiente));
+		filtrarTodas();
 	}
 }

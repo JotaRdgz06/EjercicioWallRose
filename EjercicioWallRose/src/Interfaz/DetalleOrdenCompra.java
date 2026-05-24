@@ -57,6 +57,7 @@ public class DetalleOrdenCompra extends JDialog {
 	 */
 	
 	public DetalleOrdenCompra(String idCliente) {
+		setResizable(false);
         this.idCliente = idCliente;
         ventana(numeroOrden);
         crearOrden();
@@ -133,6 +134,7 @@ public class DetalleOrdenCompra extends JDialog {
 			JButton btneditar = new JButton("Editar");
 			btneditar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					editarOrden();
 				}
 			});
 			btneditar.setBounds(331, 142, 84, 20);
@@ -340,9 +342,14 @@ public class DetalleOrdenCompra extends JDialog {
 	}
 	
 	private void editarOrden() {
-		int numeroFila = table.getSelectedRow();
-		if (numeroFila == -1) {
-			JOptionPane.showMessageDialog(contentPanel, "Debe seleccionar un producto", "Error", JOptionPane.ERROR_MESSAGE);
-		}
+	    int numeroFila = table.getSelectedRow();
+	    if (numeroFila == -1) {
+	        JOptionPane.showMessageDialog(contentPanel, "Debe seleccionar un producto", "Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    LineaOrdenInter ventana = new LineaOrdenInter(numeroOrden);
+	    ventana.setNumeroLinea(numeroFila);
+	    ventana.setVisible(true);
+	    cargarProductos();
 	}
 }

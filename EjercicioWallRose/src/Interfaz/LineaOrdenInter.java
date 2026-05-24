@@ -30,6 +30,7 @@ public class LineaOrdenInter extends JDialog {
 	private JTable table;
 	private JTextField textField;
 	private Integer numeroOrden;
+	private Integer numeroLinea;
 
 	/**
 	 * Launch the application.
@@ -159,10 +160,19 @@ public class LineaOrdenInter extends JDialog {
 	    }
 	    ControladoraWallRose control = ControladoraWallRose.getInstance();
 	    try {
-	        control.agregarLineaOrden(numeroOrden, codigoProducto, cantidad);
-	        dispose();
+	    	if (numeroLinea == null) {
+	    	    control.agregarLineaOrden(numeroOrden, codigoProducto, cantidad);
+	    	    dispose();
+	    	} else {
+	    	    control.actualizarLineaOrden(numeroOrden, numeroLinea, codigoProducto, cantidad);
+	    	    dispose();
+	    	}
 	    } catch (Exception e) {
 	        JOptionPane.showMessageDialog(contentPanel, "Error al agregar el producto: " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 	    }
+	}
+
+	public void setNumeroLinea(Integer numeroLinea) {
+		this.numeroLinea = numeroLinea;
 	}
 }

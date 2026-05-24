@@ -127,6 +127,16 @@ public class AgregarCliente extends JDialog {
             JOptionPane.showMessageDialog(contentPanel, "Todos los campos son obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        if (!email.contains("@")) {
+            JOptionPane.showMessageDialog(contentPanel, "El email no es válido", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(contentPanel, "El ID debe ser un número", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         ControladoraWallRose control = ControladoraWallRose.getInstance();
         try {
 			if (idClienteEditar == null) {

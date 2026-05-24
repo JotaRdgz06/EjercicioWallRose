@@ -114,7 +114,7 @@ public class AgregarCliente extends JDialog {
                     textFieldNombre.setEditable(false);
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(contentPanel, "No se pudo cargar el cliente", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(contentPanel, "No se pudo cargar el cliente" + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
             }
 		}
     }
@@ -137,8 +137,8 @@ public class AgregarCliente extends JDialog {
 				JOptionPane.showMessageDialog(contentPanel, "Cliente actualizado correctamente");
 			}
 			dispose();
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(contentPanel, "Se ha producido un error", "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(contentPanel, "Error: " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

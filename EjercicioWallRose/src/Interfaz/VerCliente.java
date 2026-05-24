@@ -149,7 +149,7 @@ public class VerCliente extends JDialog {
         try {
             List<Orden> ordenes = control.obtenerListadoOrdenesIniciadasCliente(idCliente);
             for (Orden orden : ordenes) {
-                Object[] fila = new Object[] {orden.getNumero(), orden.getFecha(), orden.getEstado()};
+                Object[] fila = new Object[] {orden.getNumero(), orden.getFecha().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")), orden.getEstado()};
                 model.addRow(fila);
             }
         } catch (Exception e) {
@@ -226,13 +226,19 @@ public class VerCliente extends JDialog {
 		DefaultTableModel model = (DefaultTableModel) tablaCliente.getModel();
 		model.setRowCount(0);
 		double totalPendiente = 0;
-		List<Orden> listaOrden = control.obtenerListadoOrdenes();
+		List<Orden> listaOrden;
+		try {
+			listaOrden = control.obtenerListadoOrdenesCliente(idCliente);
+		
 		for (Orden orden: listaOrden) {
 			Object[] fila = new Object[] {orden.getNumero(), orden.getFecha().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")), orden.getEstado()};
 			model.addRow(fila);
 			if (orden.getEstado() == Logica.EstadoOrden.PENDIENTE) {
 	            totalPendiente += orden.calcularMontoTotal();
 	        }
+		}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Error al cargar datos del cliente", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		texpago.setText(String.format("₡%.2f", totalPendiente));
 		filtrarTodas();

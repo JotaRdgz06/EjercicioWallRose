@@ -165,6 +165,7 @@ public class VentanaInterfaz {
 		borrarbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				borrarOrden();
+				cargarOrdenes();
 			}
 		});
 		borrarbtn.setBounds(456, 166, 84, 20);
@@ -316,6 +317,7 @@ public class VentanaInterfaz {
 				try {
 					control.borrarCliente(idCliente);
 					cargarClientes();
+					cargarOrdenes();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(frame, "Error al borrar el cliente", "Error", JOptionPane.ERROR_MESSAGE);
 				}

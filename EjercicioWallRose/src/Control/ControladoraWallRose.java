@@ -121,11 +121,17 @@ public class ControladoraWallRose implements Serializable {
     }
     
     public void borrarCliente(String idCliente) throws Exception {
-    	if (clientes.containsKey(idCliente)) {
-    		clientes.remove(idCliente);
-    	} else {
-    		throw new Exception("No se encontró el usuario");
-    	}
+        if (clientes.containsKey(idCliente)) {
+            Cliente cliente = clientes.get(idCliente);
+            Map<Integer, Orden> ordenesCliente = cliente.getOrdenes();
+            List<Orden> listaOrdenes = new LinkedList<>(ordenesCliente.values());
+            for (Orden orden : listaOrdenes) {
+                ordenes.remove(orden.getNumero());
+            }
+            clientes.remove(idCliente);
+        } else {
+            throw new Exception("No se encontró el usuario");
+        }
     }
     
     public List<Producto> obtenerListadoProductos() {

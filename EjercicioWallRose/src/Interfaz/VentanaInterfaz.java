@@ -414,7 +414,7 @@ public class VentanaInterfaz {
 					control.borrarProducto(codigo);
 					cargarProductos();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(frame, "Error al borrar el producto", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frame, "Error: " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}

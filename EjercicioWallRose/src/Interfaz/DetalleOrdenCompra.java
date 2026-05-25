@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Control.ControladoraWallRose;
 import Logica.Cliente;
+import Logica.EstadoOrden;
 import Logica.Orden;
 import Logica.Producto;
 
@@ -281,7 +282,7 @@ public class DetalleOrdenCompra extends JDialog {
 			control.establecerOrdenPendiente(numeroOrden);
 			lblNewLabel_2.setText("PENDIENTE");
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(contentPanel, "Error al cambiar estado", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(contentPanel, "Error al cambiar estado: " + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -296,9 +297,20 @@ public class DetalleOrdenCompra extends JDialog {
 	}
 	
 	private void agregarProducto() {
-		LineaOrdenInter ventana = new LineaOrdenInter(numeroOrden);
-		ventana.setVisible(true);
-		cargarProductos();
+	    ControladoraWallRose control = ControladoraWallRose.getInstance();
+	    try {
+	        Orden orden = control.obtenerOrden(numeroOrden);
+	        if (orden.getEstado() == EstadoOrden.TERMINADA) {
+	            JOptionPane.showMessageDialog(contentPanel, "No se puede modificar una orden terminada", "Error", JOptionPane.ERROR_MESSAGE);
+	            return;
+	        }
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(contentPanel, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    LineaOrdenInter ventana = new LineaOrdenInter(numeroOrden);
+	    ventana.setVisible(true);
+	    cargarProductos();
 	}
 	
 	private void cargarProductos() {
@@ -309,7 +321,7 @@ public class DetalleOrdenCompra extends JDialog {
 	        List<Logica.LineaOrden> lineas = control.obtenerLineasOrden(numeroOrden);
 	        for (Logica.LineaOrden linea : lineas) {
 	            Object[] fila = new Object[] {
-	                linea.getProducto().getCodigo(), linea.getProducto().getNombre(), linea.getCantidad(), String.format("₡%.2f", linea.calcularCosto())
+	                linea.getProducto().getCodigo(), linea.getProducto().getNombre(), linea.getCantidad() + " " + linea.getProducto().getUnidad(), String.format("₡%.2f", linea.calcularCosto())
 	            };
 	            model.addRow(fila);
 	        }
@@ -326,11 +338,21 @@ public class DetalleOrdenCompra extends JDialog {
 		if (numeroFila == -1) {
 			JOptionPane.showMessageDialog(contentPanel, "Debe seleccionar una orden", "Error", JOptionPane.ERROR_MESSAGE);
 		} else {
+			ControladoraWallRose control = ControladoraWallRose.getInstance();
+			try {
+		        Orden orden = control.obtenerOrden(numeroOrden);
+		        if (orden.getEstado() == EstadoOrden.TERMINADA) {
+		            JOptionPane.showMessageDialog(contentPanel, "No se puede modificar una orden terminada", "Error", JOptionPane.ERROR_MESSAGE);
+		            return;
+		        }
+		    } catch (Exception e) {
+		        JOptionPane.showMessageDialog(contentPanel, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		        return;
+		    }
 			DefaultTableModel model = (DefaultTableModel) table.getModel();
 			Integer numero = (Integer) model.getValueAt(numeroFila, 0);
 			int respuesta = JOptionPane.showConfirmDialog(contentPanel, "Se eliminará la orden número " + numero, "Confirmar", JOptionPane.YES_NO_OPTION);
 	        if (respuesta == JOptionPane.YES_OPTION) {
-	            ControladoraWallRose control = ControladoraWallRose.getInstance();
 	            try {
 	                control.borrarLineaOrden(numeroOrden, numeroFila);
 	                cargarProductos();
@@ -345,6 +367,17 @@ public class DetalleOrdenCompra extends JDialog {
 	    int numeroFila = table.getSelectedRow();
 	    if (numeroFila == -1) {
 	        JOptionPane.showMessageDialog(contentPanel, "Debe seleccionar un producto", "Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    ControladoraWallRose control = ControladoraWallRose.getInstance();
+	    try {
+	        Orden orden = control.obtenerOrden(numeroOrden);
+	        if (orden.getEstado() == EstadoOrden.TERMINADA) {
+	            JOptionPane.showMessageDialog(contentPanel, "No se puede modificar una orden terminada", "Error", JOptionPane.ERROR_MESSAGE);
+	            return;
+	        }
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(contentPanel, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 	        return;
 	    }
 	    LineaOrdenInter ventana = new LineaOrdenInter(numeroOrden);

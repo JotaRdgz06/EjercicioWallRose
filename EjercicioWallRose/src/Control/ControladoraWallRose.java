@@ -165,6 +165,14 @@ public class ControladoraWallRose implements Serializable {
     public void borrarProducto(Integer codigoProducto) throws Exception {
         if (!productos.containsKey(codigoProducto))
             throw new Exception("No se encontró el producto");
+        for (Orden orden : ordenes.values()) {
+            for (LineaOrden linea : orden.getLineas()) {
+            	Producto producto = linea.getProducto();
+            	Integer codigoLinea = producto.getCodigo();
+                if (codigoLinea.equals(codigoProducto))
+                    throw new Exception("El producto está siendo usado en una orden");
+            }
+        }
         productos.remove(codigoProducto);
     }
     
@@ -209,9 +217,20 @@ public class ControladoraWallRose implements Serializable {
     public void establecerOrdenPendiente(Integer numeroOrden) throws Exception {
         if (ordenes.containsKey(numeroOrden)) {
             Orden orden = ordenes.get(numeroOrden);
-        	orden.setEstado(EstadoOrden.PENDIENTE);
-        } else 
-        	throw new Exception("No existe una orden con ese número");
+            for (LineaOrden linea : orden.getLineas()) {
+                Producto producto = linea.getProducto();
+                double existencias = producto.getExistencias();
+                double cantidad = linea.getCantidad();
+                if (cantidad > existencias)
+                    throw new Exception("No hay suficientes existencias");
+            }
+            for (LineaOrden linea : orden.getLineas()) {
+                Producto producto = linea.getProducto();
+                producto.setExistencias(producto.getExistencias() - linea.getCantidad());
+            }
+            orden.setEstado(EstadoOrden.PENDIENTE);
+        } else
+            throw new Exception("No existe una orden con ese número");
     }
  
     public void establecerOrdenTerminada(Integer numeroOrden) throws Exception {
